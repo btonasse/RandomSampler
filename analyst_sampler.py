@@ -84,6 +84,7 @@ class RandomAnalyst:
             Start and end slice indices: {start_index}:{end_index}
             Length of analysts list: {len(self.analysts)}
             ''')
+            raise
 
         return picked_analysts
 
