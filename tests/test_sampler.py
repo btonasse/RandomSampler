@@ -1,11 +1,10 @@
 # Todo scenario: Change in analyst list between weeks (change in order and/or length of list)
 
-from unittest import TestCase
 import unittest
 from analyst_sampler import RandomSampler
 from datetime import date, timedelta
 
-class TestSampler(TestCase):
+class TestSampler(unittest.TestCase):
     '''
     Test a scenario where the number of analysts is a multiple of number of samples per week .
     '''
