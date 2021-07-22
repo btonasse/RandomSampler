@@ -6,7 +6,7 @@ from datetime import date, timedelta
 
 class TestSampler(unittest.TestCase):
     '''
-    Test a scenario where the number of analysts is a multiple of number of samples per week .
+    Test RandomSampler use cases
     '''
     def setUp(self) -> None:
         # Generate dummy analysts list
