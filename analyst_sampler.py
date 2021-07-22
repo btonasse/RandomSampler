@@ -13,13 +13,13 @@ class RandomAnalyst:
     Instantiate this class with a list of analysts and a number of samples per week.
     To get a unique sample, call get_sample() on the instance
 
-    Caveats:
+    Notes:
     1) This functionality relies on the date at the time of instantiation to determine the seed of the list shuffler.
     2) It also assumes that the list of analysts is constant (analysts should be passed always in the same order).
     3) If an analyst is added or removed from the list, you might get unreliable results until the next fixed seed is generated.
     4) If the list of analysts is not a multiple of the number of weekly samples, leftovers will be inserted at the top of the list on the next seed reset.
     '''
-    ROOT_DATE = date(2021, 5, 23)
+    ROOT_DATE = date(2021, 7, 1)
     def __init__(self, analysts: list, samples_per_week: int):
         # The list of analysts to sample from
         self.analysts = analysts
@@ -55,11 +55,15 @@ class RandomAnalyst:
         '''
         Return a seed for shuffling the list of analysts.
         
-        The seed is reset when the number of elapsed days is a multiple of the number of days it takes until all analysts have been picked once (self.weeks_to_exhaust_samples*7).
-        If the elapsed days are a multiple of this number, reset the seed (equal to the number of elapsed days).
-        Otherwise use the last number of elapsed days that was a multiple of self.weeks_to_exhaust_samples*7
-
-        This guaranteed that the list of analysts will be shuffled in the same way until everyone has been picked once.
+        The seed is reset when all analysts have been picked once (not counting leftovers that would result in an IndexError).
+        The reset date is calculated by tracking the number of days elapsed since an arbitrary constant date
+        and comparing it to the number of days necessary to pick all analysts once (again, not counting leftovers that would result in an IndexError). 
+        The actual seed is the number of elapsed days when the reset occurs.
+    
+        Example:
+        The list of analysts contains 7 items, and each week two are picked.
+        Therefore it takes 3 weeks for all but one analyst to be picked.
+        Once 3 weeks have passed (21 days), the seed will reset to this number of days.
         '''
         days_since_seed_was_reset = self.elapsed_days % (self.weeks_to_exhaust_samples*7)
         last_seed = self.elapsed_days - days_since_seed_was_reset
