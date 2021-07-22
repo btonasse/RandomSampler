@@ -2,7 +2,7 @@ import random
 from datetime import date
 
 
-class RandomAnalyst:
+class RandomSampler:
     '''
     The purpose of this class is to pick a "random" number of analysts every week,
     while making sure that the same analyst is not picked again until all analysts have been picked.
@@ -124,7 +124,7 @@ class RandomAnalyst:
 
 if __name__ == '__main__':
     analysts = [n for n in range(7)]
-    x = RandomAnalyst(analysts, 2)
+    x = RandomSampler(analysts, 2)
 
     print(f'Elapsed days since arbitrary date: {x.elapsed_days}')
     print(f'Elapsed weeks since arbitrary date: {x.elapsed_days//7}')
