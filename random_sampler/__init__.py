@@ -102,10 +102,10 @@ class RandomSampler:
         previous_shuffled_list = self._shuffle_list(previous_seed)
         leftovers_to_insert = previous_shuffled_list[-leftovers:]
         self.logger.debug(
-            f"There are {leftovers} leftover elements from previous week.\n"
-            f"\tQueue from previous week: {previous_shuffled_list}\n"
+            f"There are {leftovers} leftover elements from previous seed reset.\n"
+            f"\tQueue from previous seed reset: {previous_shuffled_list}\n"
             f"\tQueue from this week: {self.shuffled_elements}\n"
-            f"\tLeftover elements from previous week: {leftovers_to_insert}"
+            f"\tLeftover elements from previous seed reset: {leftovers_to_insert}"
         )
 
         # Remove leftovers from current list

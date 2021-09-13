@@ -12,3 +12,4 @@ venv.bak/
 Pipfile.lock
 
 *.log
+elements.txt
