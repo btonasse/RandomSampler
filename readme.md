@@ -5,8 +5,17 @@ This is achieved by calculating the elapsed time between the time of instantiati
 
 ## Usage:
 
-Instantiate this class with a fixed list of elements and a number of samples per week.
-To get a unique sample, call `get_sample()` on the instance
+```Python
+from random_sampler import RandomSampler
+
+# Instantiate the class with a fixed list of elements and a number of samples per week.
+elements = [n for n in range(7)]
+sampler = RandomSampler(elements, 2)
+
+# Get a unique sample for this week
+sample = sampler.get_sample()
+print(sample)
+```
 
 ## Notes:
 
