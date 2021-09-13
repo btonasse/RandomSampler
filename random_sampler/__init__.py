@@ -138,20 +138,3 @@ class RandomSampler:
             raise
 
         return picked_elements
-
-
-
-if __name__ == '__main__':
-    elements = [n for n in range(7)]
-    x = RandomSampler(elements, 2)
-
-    print(f'Elapsed days since arbitrary date: {x.elapsed_days}')
-    print(f'Elapsed weeks since arbitrary date: {x.elapsed_days//7}')
-    print(f'Weeks until all elements are used: {x.weeks_to_exhaust_samples}')
-    print(f'Seed is: {x.seed}')
-
-    print(f'elements: {x.elements}')
-    print(f'Shuffled elements: {x.shuffled_elements}')
-
-    print(f'Sample for this week: {x.get_sample()}')
-
