@@ -5,8 +5,10 @@ Usage: python -m unittest discover tests
 
 import unittest
 from random_sampler import RandomSampler
+from random_sampler.logger import logger_setup
 from datetime import date, timedelta
 
+logger = logger_setup('SamplerTest', 'sampler_test.log')
 class TestSampler(unittest.TestCase):
     '''
     Test RandomSampler use cases
@@ -26,11 +28,11 @@ class TestSampler(unittest.TestCase):
         Simulate nine consecutive weekly runs to check if the seed reset is working as intended.
         '''
         # Print test parameters
-        print((f'\n\nSetting up sampler test with following parameters:\n'
-               f'Arbitrary root date: {self.default_root_date}\n'
-               f'Samples per week: {self.samples_per_week}\n'
-               f'Weeks until all elements are used: {self.sampler.weeks_to_exhaust_samples}\n'
-               f'elements: {self.elements}'))
+        logger.debug(f'Setting up sampler test with following parameters:\n'
+               f'\tArbitrary root date: {self.default_root_date}\n'
+               f'\tSamples per week: {self.samples_per_week}\n'
+               f'\tWeeks until all elements are used: {self.sampler.weeks_to_exhaust_samples}\n'
+               f'\telements: {self.elements}')
         
         # Variable to track which elements have been picked already
         picked_elements = []
@@ -39,8 +41,8 @@ class TestSampler(unittest.TestCase):
         
         separator = '*'*40
         for week in range(9):
-            print(separator)
-            print(f'Running sampler on week {week}...')
+            logger.sep('debug', separator)
+            logger.debug(f'Running sampler on week {week}...')
             
             # Decrement ROOT_DATE to simulate the sampler being run in different weeks
             delta = timedelta(days = week*7)
@@ -51,11 +53,13 @@ class TestSampler(unittest.TestCase):
             sample = self.sampler.get_sample()
            
             # Print initialized variables
-            print((f'Elapsed days since root date: {self.sampler.elapsed_days}\n'
-                   f'Elapsed weeks since root date: {self.sampler.elapsed_days//7}\n'
-                   f'Calculated seed: {self.sampler.seed}\n'
-                   f'Shuffled elements: {self.sampler.shuffled_elements}\n'
-                   f'Weekly sample: {sample}'))
+            logger.debug(
+                f'\n\tElapsed days since root date: {self.sampler.elapsed_days}\n'
+                f'\tElapsed weeks since root date: {self.sampler.elapsed_days//7}\n'
+                f'\tCalculated seed: {self.sampler.seed}\n'
+                f'\tShuffled elements: {self.sampler.shuffled_elements}\n'
+                f'\tWeekly sample: {sample}'
+            )
 
             # Check if elapsed days calculated correctly
             self.assertEqual(self.sampler.elapsed_days, delta.days
@@ -93,6 +97,8 @@ class TestSampler(unittest.TestCase):
             picked_elements.extend(sample)
             # Update previous_seed
             previous_seed = self.sampler.seed
+
+        logger.sep('debug', separator+'\n')
 
     def test_with_leftovers(self):
         '''

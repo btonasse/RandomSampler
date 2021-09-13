@@ -1,5 +1,6 @@
 import random
 from datetime import date
+from random_sampler.logger import logger_setup
 
 
 class RandomSampler:
@@ -21,6 +22,8 @@ class RandomSampler:
     4. If the number of elements is not a multiple of the number of weekly samples, leftovers will be inserted at the top of the list upon the next seed reset.
     '''
     ROOT_DATE = date(2021, 7, 1)
+    logger = logger_setup('Sampler', 'sampler.log')
+    
     def __init__(self, elements: list, samples_per_week: int):
         # The list of elements to sample from
         self.elements = elements
@@ -31,17 +34,23 @@ class RandomSampler:
         # How many weeks have to pass until all elements have been picked once
         self.weeks_to_exhaust_samples = len(self.elements) // self.samples_per_week
         
+        self.logger.info(f'Sampler set up with following parameters:\n'
+               f'\tRoot date: {self.ROOT_DATE}\n'
+               f'\tSamples per week: {self.samples_per_week}\n'
+               f'\tWeeks until all elements are used: {self.weeks_to_exhaust_samples}\n'
+               f'\tElements: {self.elements}\n'
+               f'\tCurrent date: {date.today()}')
+        
         # Elapsed time since ROOT_DATE
         self.elapsed_days = self._get_elapsed_days()
-        
+        self.logger.debug(f'Elapsed days since root rate: {self.elapsed_days}')
         # Shuffle the list of elements
         self.seed = self._calculate_seed()
         self.shuffled_elements = self._shuffle_list(self.seed)
 
         # Prioritize leftovers from last seed
         self._insert_leftovers()
-        
-
+        self.logger.debug(f"Elements are ordered like this this week: {self.shuffled_elements}")
 
     def _get_elapsed_days(self) -> int:
         '''
@@ -68,6 +77,7 @@ class RandomSampler:
         '''
         days_since_seed_was_reset = self.elapsed_days % (self.weeks_to_exhaust_samples*7)
         last_seed = self.elapsed_days - days_since_seed_was_reset
+        self.logger.debug(f"Days since seed was last reset: {days_since_seed_was_reset}. This week's seed: {last_seed}")
         return last_seed
 
     def _shuffle_list(self, seed: int) -> list:
@@ -91,6 +101,12 @@ class RandomSampler:
         previous_seed = self.seed - self.weeks_to_exhaust_samples*7
         previous_shuffled_list = self._shuffle_list(previous_seed)
         leftovers_to_insert = previous_shuffled_list[-leftovers:]
+        self.logger.debug(
+            f"There are {leftovers} leftover elements from previous week.\n"
+            f"\tQueue from previous week: {previous_shuffled_list}\n"
+            f"\tQueue from this week: {self.shuffled_elements}\n"
+            f"\tLeftover elements from previous week: {leftovers_to_insert}"
+        )
 
         # Remove leftovers from current list
         self.shuffled_elements = [x for x in self.shuffled_elements if x not in leftovers_to_insert]
@@ -111,12 +127,14 @@ class RandomSampler:
         
         try:
             picked_elements = self.shuffled_elements[start_index:end_index]
+            self.logger.debug(f"This week's sample: {picked_elements}")
         except IndexError:
-            print(f'''Not enough elements to pick. Variables:
-            Weeks since seed was reset: {weeks_since_seed_was_reset}
-            Start and end slice indices: {start_index}:{end_index}
-            Length of elements list: {len(self.elements)}
-            ''')
+            self.logger.error(
+                f'Not enough elements to pick. Variables\n:'
+                f'\tWeeks since seed was reset: {weeks_since_seed_was_reset}\n'
+                f'\tStart and end slice indices: {start_index}:{end_index}\n'
+                f'\tLength of elements list: {len(self.elements)}\n'
+            )
             raise
 
         return picked_elements

@@ -10,3 +10,5 @@ env.bak/
 venv.bak/
 
 Pipfile.lock
+
+*.log
