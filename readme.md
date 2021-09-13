@@ -17,6 +17,20 @@ sample = sampler.get_sample()
 print(sample)
 ```
 
+### Demos and tests
+
+To run unit tests, run the module wth the -t argument:
+```Bash
+$ python -m random_sampler -t
+```
+
+For a quick demo:
+```Bash
+$ python -m random_sampler -d
+```
+
+The logs of the test/demo will be written to a `.log` file.
+
 ## Notes:
 
 1. This functionality relies on the date at the time of instantiation to determine the seed of the list shuffler.
