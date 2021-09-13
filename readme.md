@@ -5,6 +5,10 @@ This is achieved by calculating the elapsed time between the time of instantiati
 
 ## Usage:
 
+You can either import it into your code or run it from the command line with `python -m`.
+Regardless of how the sampler is called, a log with the results is written to a `sampler.log` file.
+### Importing the module into your code:
+
 ```Python
 from random_sampler import RandomSampler
 
@@ -17,19 +21,17 @@ sample = sampler.get_sample()
 print(sample)
 ```
 
-### Demos and tests
+### Getting a sample from a file:
 
-To run unit tests, run the module wth the -t argument:
-```Bash
-$ python -m random_sampler -t
-```
+`$ python -m random_sampler fromfile FILENAME SAMPLES`
 
-For a quick demo:
-```Bash
-$ python -m random_sampler -d
-```
+Where `FILENAME` is a file containing the list of elements to sample from (one per line), and `SAMPLES` is the number of weekly samples.
 
-The logs of the test/demo will be written to a `.log` file.
+### Unit tests
+
+To run the built-in unit tests, execute this from the command line:
+
+`$ python -m random_sampler runtest`
 
 ## Notes:
 
